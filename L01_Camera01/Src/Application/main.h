@@ -54,8 +54,11 @@ private:
 	//カメラ
 	std::shared_ptr<KdCamera>			m_spCamera = nullptr;
 
-	//ベニヤ板
+	//ポリゴン(ベニヤ板)3点が集まってできた面
 	std::shared_ptr<KdSquarePolygon>	m_spPoly = nullptr;
+
+	//地形モデル
+	std::shared_ptr<KdModelData>	m_spModel = nullptr;
 
 //=====================================================
 // シングルトンパターン
