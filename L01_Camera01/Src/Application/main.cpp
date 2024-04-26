@@ -66,11 +66,33 @@ void Application::Update()
 {
 	//カメラ行列の更新
 	{
-		Math::Matrix _localPos = Math::Matrix::CreateTranslation(0, 6.0f, 0);
+		//拡縮
+		Math::Matrix _mScale = Math::Matrix::CreateScale(1);
+
+		//どれだけ傾けているか
+		Math::Matrix _mRotationX = Math::Matrix::CreateRotationX(
+			DirectX::XMConvertToRadians(45));
+
+		static float _yRot = 0;
+
+		Math::Matrix _mRotationY = Math::Matrix::CreateRotationY(
+			DirectX::XMConvertToRadians(_yRot));
+		//_yRot += 0.5;
+
+		//カメラの座標
+		Math::Matrix _mTrans = Math::Matrix::CreateTranslation(0, 6.0f, -5.0f);
 
 		//カメラの「ワールド行列」を作成し適応させる
-		Math::Matrix _worldMat = _localPos;
+		Math::Matrix _worldMat = _mScale * _mRotationX * _mTrans *_mRotationY;//W=S*R*T
 		m_spCamera->SetCameraMatrix(_worldMat);
+
+		//ハム太郎の更新
+		{
+			if (GetAsyncKeyState('W'));
+			if (GetAsyncKeyState('A'));
+			if (GetAsyncKeyState('S'));
+			if (GetAsyncKeyState('D'));
+		}
 	}
 }
 
@@ -131,11 +153,12 @@ void Application::Draw()
 		//Math::Matrix _mat = Math::Matrix::Identity;//Identity(単位値)
 		//_mat._43 = 5.0f;
 		
+		
 		//static float _HamuZ = 5.0;
-		Math::Matrix _mat = Math::Matrix::CreateTranslation(0, 0, 20);
+		//Math::Matrix _mat = Math::Matrix::CreateTranslation(0, 0, 5.0f);
 		
 		KdShaderManager::Instance().
-			m_StandardShader.DrawPolygon(*m_spPoly,_mat);
+			m_StandardShader.DrawPolygon(*m_spPoly,_mHamuWorld);
 		//_HamuZ -= 0.01f;
 
 		KdShaderManager::Instance().
@@ -253,6 +276,7 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	m_spPoly = std::make_shared<KdSquarePolygon>();
 	m_spPoly->SetMaterial("Asset/Data/LessonData/Character/Hamu.png");
+	m_spPoly->SetPivot(KdSquarePolygon::PivotType::Center_Bottom);
 
 	//===================================================================
 	//地形初期化
