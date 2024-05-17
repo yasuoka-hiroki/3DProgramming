@@ -56,6 +56,7 @@ private:
 
 	//ポリゴン(ベニヤ板)3点が集まってできた面
 	std::shared_ptr<KdSquarePolygon>	m_spPoly = nullptr;
+	Math::Matrix _mHamuWorld = Math::Matrix::Identity;
 
 	//地形モデル
 	std::shared_ptr<KdModelData>	m_spModel = nullptr;
